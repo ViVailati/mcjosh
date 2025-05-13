@@ -31,27 +31,27 @@ go install
 
 ```bash
 # Create a new vanilla server
-mcjsh new vanilla --version 1.20.1 --name my-server
+mcjosh new vanilla --version 1.20.1 --name my-server
 
 # Create a new server with Fabric mod loader
-mcjsh new fabric --version 1.20.1 --loader-version 0.14.21 --name fabric-server
+mcjosh new fabric --version 1.20.1 --loader-version 0.14.21 --name fabric-server
 
 # Download mods from Modrinth
-mcjsh mods add lithium sodium
+mcjosh mods add lithium sodium
 
 # Start the server
-mcjsh start --server my-server --ram 4G
+mcjosh start --server my-server --ram 4G
 
 # List all servers
-mcjsh list
+mcjosh list
 
 # Backup a server
-mcjsh backup --server my-server
+mcjosh backup --server my-server
 ```
 
 ## Configuration
 
-The CLI uses a configuration file located at `~/.config/mcjsh/config.yaml` by default. You can specify a different configuration file using the `--config` flag.
+The CLI uses a configuration file located at `~/.config/mcjosh/config.yaml` by default. You can specify a different configuration file using the `--config` flag.
 
 Example configuration:
 
