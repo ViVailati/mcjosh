@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	client "github.com/ViVailati/mcjosh/http_client"
 	"github.com/ViVailati/mcjosh/models"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -29,7 +30,15 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Printf("We're creating a %s server from: %s\n", models.ServerTypes[i].Name, models.ServerTypes[i].URL)
+		st := models.ServerTypes[i]
+
+		fmt.Printf("We're creating a %s server from: %s\n", st.Name, st.URL)
+
+		client := client.New()
+		if err := client.GetMinecraftVersion(); err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
 	},
 }
 
