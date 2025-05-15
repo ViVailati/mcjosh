@@ -18,20 +18,23 @@ func New() *Client {
 	return &Client{http.DefaultClient}
 }
 
-// GetMinecraftVersion fetches the JSON file containing the versions of Minecraft
-func (c *Client) GetMinecraftVersion() error {
+// GetMinecraftVersions fetches the JSON file containing the versions of Minecraft
+func (c *Client) GetMinecraftVersions() ([]models.MinecraftVersion, error) {
 	fmt.Println("Fetching Minecraft versions...")
 	resp, err := c.Get("https://piston-meta.mojang.com/mc/game/version_manifest.json")
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	var manifest models.MinecraftManifest
 	if err := utils.DecodeJSON(resp.Body, &manifest); err != nil {
-		return err
+		return nil, err
 	}
 
-	fmt.Println(manifest)
-	return nil
+	rv := utils.Filter(manifest.Versions, func(v models.MinecraftVersion) bool {
+		return v.Type == "release"
+	})
+
+	return rv, nil
 }
