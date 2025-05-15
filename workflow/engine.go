@@ -1,24 +1,35 @@
 package workflow
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ViVailati/mcjosh/interfaces"
+	"github.com/ViVailati/mcjosh/models"
+)
 
 type Workflow struct {
-	Steps       map[string]Step
+	Steps       map[string]interfaces.Step
 	InitialStep string
 	CurrentStep string
-	Context     *Context
+	Context     *models.Context
 }
 
-func NewWorkflow(initialStep string) *Workflow {
+func NewWorkflow(initialStep interfaces.Step, ctx *models.Context) *Workflow {
+	if ctx == nil {
+		ctx = &models.Context{Data: make(map[string]any)}
+	}
+
+	steps := make(map[string]interfaces.Step)
+	steps[initialStep.ID()] = initialStep
 	return &Workflow{
-		Steps:       make(map[string]Step),
-		InitialStep: initialStep,
-		CurrentStep: initialStep,
-		Context:     &Context{Data: make(map[string]any)},
+		Steps:       steps,
+		InitialStep: initialStep.ID(),
+		CurrentStep: initialStep.ID(),
+		Context:     ctx,
 	}
 }
 
-func (w *Workflow) AddStep(step Step) {
+func (w *Workflow) AddStep(step interfaces.Step) {
 	w.Steps[step.ID()] = step
 }
 
