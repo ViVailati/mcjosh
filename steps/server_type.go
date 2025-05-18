@@ -33,9 +33,8 @@ func (s SelectServerTypeStep) Execute(ctx *models.Context) (*models.StepResult, 
 
 	st := models.ServerTypes[i]
 
-	ctx.Data["server_type"] = st
-
 	return &models.StepResult{
+		Data:         st,
 		NextStepID:   SelectVanillaVersionStepID,
 		ExitWorkflow: false,
 	}, nil
