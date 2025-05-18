@@ -7,10 +7,9 @@ import (
 )
 
 func DefaultWorkflow() *Workflow {
-	hc := client.New()
 	w := NewWorkflow(&steps.SelectServerTypeStep{}, &models.Context{
 		Data: map[string]any{
-			"client": hc,
+			models.HttpClient: client.New(),
 		},
 	})
 	w.AddStep(&steps.SelectVanillaVersionStep{})
