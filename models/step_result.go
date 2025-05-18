@@ -1,7 +1,7 @@
 package models
 
 type StepResult struct {
-	Data         map[string]any
+	Data         any
 	NextStepID   string
 	ExitWorkflow bool
 }
