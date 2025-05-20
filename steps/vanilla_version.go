@@ -18,36 +18,31 @@ func (s SelectVanillaVersionStep) Description() string {
 	return "Select the Minecraft version"
 }
 
-func (s SelectVanillaVersionStep) Execute(ctx *models.Context) (*models.StepResult, error) {
-	fmt.Printf("\x1b[33mWe're creating a %s server from: %s\n\x1b[0m", ctx.Data["server_type"].(models.ServerType).Name, ctx.Data["server_type"].(models.ServerType).URL)
-	/*client := http_client.New()
-	vs, err := client.GetMinecraftVersions()
+func (s SelectVanillaVersionStep) Execute(ctx *models.Context, result map[string]string) (*models.StepResult, error) {
+	stn, sturl, err := getServerTypeInfo(result)
 	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	versionPrompt := promptui.Select{
-		Label: "What's the Minecraft version?",
-		Items: vs,
-		Templates: &promptui.SelectTemplates{
-			Active:   `▸ {{ .ID | cyan }}`,
-			Inactive: `{{ .ID | faint }}`,
-			Selected: `{{ .ID | faint }}`,
-		},
-	}
-
-	i, _, err := versionPrompt.Run()
-	if err != nil {
-		return nil, fmt.Errorf("%s: %s", SelectVanillaVersionStepID, err)
-	}
+	fmt.Printf("\x1b[33mWe're creating a %s server from: %s\n\x1b[0m", stn, sturl)
 
 	return &models.StepResult{
-		NextStepID:   SelectServerTypeStepID,
-		ExitWorkflow: false,
-	}, nil*/
-
-	return &models.StepResult{
+		Data:         map[string]string{},
 		ExitWorkflow: true,
+		NextStepID:   GetVanillaVersionsStepID,
 	}, nil
+}
+
+func getServerTypeInfo(r map[string]string) (string, string, error) {
+	stn, ok := r["server_type_name"]
+	if !ok {
+		return "", "", fmt.Errorf("%s: missing server type name", SelectVanillaVersionStepID)
+	}
+
+	sturl, ok := r["server_type_url"]
+	if !ok {
+		return "", "", fmt.Errorf("%s: missing server type url", SelectVanillaVersionStepID)
+	}
+
+	return stn, sturl, nil
 }

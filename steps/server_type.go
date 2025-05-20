@@ -15,7 +15,7 @@ func (s SelectServerTypeStep) ID() string {
 	return SelectServerTypeStepID
 }
 
-func (s SelectServerTypeStep) Execute(ctx *models.Context) (*models.StepResult, error) {
+func (s SelectServerTypeStep) Execute(ctx *models.Context, r map[string]string) (*models.StepResult, error) {
 	typePrompt := promptui.Select{
 		Label: "What's the server type?",
 		Items: models.ServerTypes,
@@ -34,7 +34,10 @@ func (s SelectServerTypeStep) Execute(ctx *models.Context) (*models.StepResult, 
 	st := models.ServerTypes[i]
 
 	return &models.StepResult{
-		Data:         st,
+		Data: map[string]string{
+			"server_type_name": st.Name,
+			"server_type_url":  st.URL,
+		},
 		NextStepID:   SelectVanillaVersionStepID,
 		ExitWorkflow: false,
 	}, nil
