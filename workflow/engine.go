@@ -3,6 +3,7 @@ package workflow
 import (
 	"fmt"
 
+	"github.com/ViVailati/mcjosh/http_client"
 	"github.com/ViVailati/mcjosh/interfaces"
 	"github.com/ViVailati/mcjosh/models"
 )
@@ -16,7 +17,9 @@ type Workflow struct {
 
 func NewWorkflow(initialStep interfaces.Step, ctx *models.Context) *Workflow {
 	if ctx == nil {
-		ctx = &models.Context{Data: make(map[string]any)}
+		ctx = &models.Context{
+			Client: http_client.New(),
+		}
 	}
 
 	steps := make(map[string]interfaces.Step)
@@ -35,6 +38,7 @@ func (w *Workflow) AddStep(step interfaces.Step) {
 
 func (w *Workflow) Run() error {
 	w.CurrentStep = w.InitialStep
+	stepResults := make(map[string]string)
 
 	for {
 		step, ok := w.Steps[w.CurrentStep]
@@ -42,7 +46,7 @@ func (w *Workflow) Run() error {
 			return fmt.Errorf("step %s not in workflow", w.CurrentStep)
 		}
 
-		result, err := step.Execute(w.Context)
+		result, err := step.Execute(w.Context, stepResults)
 		if err != nil {
 			return err
 		}
@@ -51,6 +55,7 @@ func (w *Workflow) Run() error {
 			break
 		}
 
+		stepResults = result.Data
 		w.CurrentStep = result.NextStepID
 	}
 
